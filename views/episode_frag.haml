@@ -1,0 +1,10 @@
+%article.episode
+  %header
+    %h1
+      %a{ href: "/episode/#{idx}" }= episode[:title]
+      %span.date= episode[:date].strftime("%B %-d, %Y")
+  %section
+    %p= episode[:description]
+    - if detail
+      %audio{ controls: "" }
+        %source{ src: episode[:audio][:url], :type => "audio/mpeg" } # type should be episode[:audio][:type]

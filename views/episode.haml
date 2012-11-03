@@ -1,0 +1,14 @@
+!!!
+%html
+  %head
+    %title
+      Postmodem: #{ episode[:title] }
+    %link{ href: "/style.css", rel: "stylesheet", type: "text/css" }
+    %link{ href: "http://feeds.feedburner.com/postmodem", rel: :alternate, type: "application/rss+xml", title: "All Episodes Feed" }
+  %body
+    %header
+      %h1
+        %a{ href: "/" } Postmodem
+      %h2 A Postmodern Podcast
+    %section
+      = haml :episode_frag, locals: { :episode => episode, :detail => true, :idx => idx }

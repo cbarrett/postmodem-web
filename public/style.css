@@ -1,0 +1,95 @@
+body {
+  background: black url('postmodem_bg.jpeg') no-repeat;
+  background-position: 45% 0%;
+  background-position: -webkit-calc(50% - 25px) 0%;
+  background-position: -moz-calc(50% - 25px) 0%;
+  background-position: calc(50% - 25px) 0%;
+  color: #DDDDDD;
+  font: 15px "Tahoma";
+}
+
+a {
+  color: #3494ff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:visited {
+  color: #3494ff;
+}
+
+p {
+  line-height: 19px;
+}
+
+p:first-of-type {
+  margin-top: .25em;
+}
+
+header > h1 {
+  font: 72px "Georgia";
+  margin-bottom: 0px;
+}
+
+header > h2  {
+  margin-top: -10px;
+  font: 24px "Tahoma";
+  font-style: italic;
+  color: #484c6f;
+}
+
+header > section > p {
+  font: 13px Helvetica;
+  letter-spacing: 1px;
+  width: 480px;
+  margin-left: auto;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-bottom: .25em;
+}
+
+header > section > p.intro {
+  color: #d4d06d;
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+
+body > header {
+  text-align: right;
+  margin-left: auto;
+  margin-right: auto;
+  width: 600px;
+}
+
+body > section {
+  padding-left: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 600px;
+}
+
+article.episode {
+  width: 600px;
+  border-bottom: 1px dashed #4c4c4c;
+}
+
+article.episode > header > h1 {
+  font: 24px "Georgia";
+  margin-bottom: .5em;
+}
+
+article.episode > header > h1 > span.date {
+  padding-left: .5em;
+  font: 13px "Tahoma";
+  font-style: italic;
+  color: #484c6f;
+}
+
+article.episode section {
+  padding-left: 15px;
+  text-align: justify;
+  -ms-hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}

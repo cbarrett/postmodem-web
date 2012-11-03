@@ -1,0 +1,23 @@
+!!!
+%html
+  %head
+    %title Postmodem
+    %link{ href: "style.css", rel: :stylesheet, type: "text/css" }
+    %link{ href: "http://feeds.feedburner.com/postmodem", rel: :alternate, type: "application/rss+xml", title: "All Episodes Feed" }
+  %body
+    %header
+      %h1
+        %a{ href: "/" } Postmodem
+      %h2 A Postmodern Podcast
+      %section
+        %p.intro Three highly branching and divergent young men reminisce about growing up in the crumbling American empire. With digressions to technology, rap music, popular culture, and literature.
+        %p Hosted by Colin Barrett, Patrick Thomson, and Phillip Bowden
+        
+        %p
+          %a{ href: "http://feeds.feedburner.com/postmodem" } Subscribe with RSS
+          \ - 
+          %a{ href: "https://itunes.apple.com/us/podcast/postmodem/id530525508" } Subscribe in iTunes
+        
+    %section
+      - @episodes.each_with_index do |ep, i| # sorted in descending order
+        = haml :episode_frag, locals: { episode: ep, detail: false, idx: eps.count - i }
