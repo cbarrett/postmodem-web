@@ -30,7 +30,7 @@ cacheOK :: TCache a -> UTCTime -> STM Bool
 cacheOK cache now = do
   val <- readTVar (tVar cache)
   case val of
-    Just val' -> return $ diffUTCTime (birthday val') now < timeToLive cache
+    Just val' -> return $ diffUTCTime now (birthday val') < timeToLive cache
     Nothing   -> return False
 
 readTCache :: TCache a -> UTCTime -> STM a
