@@ -40,7 +40,7 @@ tshow :: (Show a) => a -> Text
 tshow = T.pack . show
     
 episodeTitle :: Int -> Episode -> Text
-episodeTitle i ep = "Postmodem: #" <> (tshow i) <> "— " <> (T.pack $ epTitle ep)
+episodeTitle i ep = "Postmodem: #" <> (tshow i) <> "— " <> (epTitle ep)
     
 episodeURL :: Int -> Text
 episodeURL i = "episode/" <> (tshow i)

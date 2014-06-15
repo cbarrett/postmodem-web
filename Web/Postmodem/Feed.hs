@@ -11,17 +11,19 @@ import Data.Time.Clock
 import Network.Curl.Download
 import Text.Feed.Query
 import Text.Feed.Types
+import Data.Text
+import Control.Applicative
 
 data Episode = Episode
-  { epTitle :: String
-  , description :: String
+  { epTitle :: Text
+  , description :: Text
   , date :: UTCTime
   , epAudio :: Audio
   } deriving (Show)
 
 data Audio = Audio
-  { url :: String
-  , _type :: String
+  { url :: Text
+  , _type :: Text
   } deriving (Show)
 
 getEpisodes :: IO [Episode]
@@ -29,10 +31,10 @@ getEpisodes = openAsFeed "http://feeds.feedburner.com/postmodem" >>= return . ei
 
 processFeed :: Feed -> [Episode]
 processFeed f = catMaybes $ for (feedItems f) $ \item -> do
-  title <- getItemTitle item
-  description <- getItemDescription item
+  title <- pack <$> getItemTitle item
+  description <- pack <$> getItemDescription item
   Just date <- getItemPublishDate item
   (audioURL, Just audioType, _) <- getItemEnclosure item
-  return Episode { epTitle = title, description, date, epAudio = Audio { url = audioURL, _type = audioType } }
+  return Episode { epTitle = title, description, date, epAudio = Audio { url = pack audioURL, _type = pack audioType } }
 
 for = flip fmap
