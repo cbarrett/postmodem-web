@@ -2,8 +2,8 @@
 
 module Web.Postmodem.Feed
   ( getEpisodes
-  , Episode
-  , Audio
+  , Episode, title, description, date, audio
+  , Audio, url, _type
   ) where
 
 import Data.Maybe
@@ -24,8 +24,8 @@ data Audio = Audio
   , _type :: String
   } deriving (Show)
 
-getEpisodes :: IO (Maybe [Episode])
-getEpisodes = openAsFeed "http://feeds.feedburner.com/postmodem" >>= return . either (const Nothing) (Just . processFeed)
+getEpisodes :: IO [Episode]
+getEpisodes = openAsFeed "http://feeds.feedburner.com/postmodem" >>= return . either (const []) processFeed
 
 processFeed :: Feed -> [Episode]
 processFeed f = catMaybes $ for (feedItems f) $ \item -> do
