@@ -2,8 +2,8 @@
 
 module Web.Postmodem.Feed
   ( getEpisodes
-  , Episode, title, description, date, audio
-  , Audio, url, _type
+  , Episode (..)
+  , Audio (..)
   ) where
 
 import Data.Maybe
@@ -13,10 +13,10 @@ import Text.Feed.Query
 import Text.Feed.Types
 
 data Episode = Episode
-  { title :: String
+  { epTitle :: String
   , description :: String
   , date :: UTCTime
-  , audio :: Audio
+  , epAudio :: Audio
   } deriving (Show)
 
 data Audio = Audio
@@ -33,6 +33,6 @@ processFeed f = catMaybes $ for (feedItems f) $ \item -> do
   description <- getItemDescription item
   Just date <- getItemPublishDate item
   (audioURL, Just audioType, _) <- getItemEnclosure item
-  return Episode { title, description, date, audio = Audio { url = audioURL, _type = audioType } }
+  return Episode { epTitle = title, description, date, epAudio = Audio { url = audioURL, _type = audioType } }
 
 for = flip fmap
