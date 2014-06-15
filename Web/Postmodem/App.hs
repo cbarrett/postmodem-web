@@ -1,7 +1,7 @@
 {-# LANGUAGE NamedFieldPuns, OverloadedStrings #-}
 
 module Web.Postmodem.App 
-  (
+  ( appMain
   ) where
 
 import Control.Concurrent.STM
