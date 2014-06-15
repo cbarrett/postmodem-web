@@ -11,8 +11,9 @@ import Control.Monad.Trans.Reader
 import Data.Text.Lazy hiding (index)
 import Data.Time.Clock
 import Data.Monoid
-import Web.Scotty.Trans
+import Network.Wai.Middleware.Static
 import Text.Blaze.Html.Renderer.Text
+import Web.Scotty.Trans
 
 import Web.Postmodem.Cache
 import Web.Postmodem.Feed
@@ -34,6 +35,8 @@ appMain = do
   episodes <- newTCacheIO (fromIntegral 500) getEpisodes
   let runAppT r = runReaderT r AppState {episodes}
   scottyT 3000 runAppT runAppT $ do
+    
+    middleware . staticPolicy $ addBase "public"
     
     get "/episode/:idx" $ do
       eps <- getEps
