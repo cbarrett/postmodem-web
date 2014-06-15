@@ -27,5 +27,7 @@ executable postmodem-web
                      , stm == 2.4.*
                      , text == 1.1.*
                      , transformers == 0.3.*
+                     , download-curl == 0.1.4
+                     , time == 1.4.*
   -- hs-source-dirs:      
   default-language:    Haskell2010
