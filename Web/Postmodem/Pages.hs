@@ -8,8 +8,10 @@ import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5 as A
 import Data.Foldable
 import Data.Monoid
-import Data.Text (Text)
-import qualified Data.Text as T
+import Data.Text.Lazy (Text)
+import qualified Data.Text.Lazy as T
+import Data.Text.Lazy.Builder
+import Data.Text.Lazy.Builder.Int
 
 import Web.Postmodem.Feed
 import qualified Web.Postmodem.Feed as W
@@ -35,15 +37,12 @@ index episodes = docTypeHtml $ do
     
     let episodesWithIndex = zip episodes [1..]
     foldMap episodeFragment episodesWithIndex
-
-tshow :: (Show a) => a -> Text
-tshow = T.pack . show
     
-episodeTitle :: Int -> Episode -> Text
-episodeTitle i ep = "Postmodem: #" <> (tshow i) <> "— " <> (epTitle ep)
+episodeTitle :: Int -> Episode -> Html
+episodeTitle _ ep = "Postmodem —" <> toHtml (epTitle ep)
     
 episodeURL :: Int -> Text
-episodeURL i = "episode/" <> (tshow i)
+episodeURL i = toLazyText $ "episode/" <> decimal i
 
 episodeFragment :: (Episode, Int) -> Html
 episodeFragment (ep, index) = article ! class_ "episode" $ do
@@ -51,8 +50,7 @@ episodeFragment (ep, index) = article ! class_ "episode" $ do
     h1 $ do
       a ! href (toValue $ episodeURL index) $ toHtml (epTitle ep)
       H.span ! class_ "date" $ toHtml (show (date ep))
-    section $ do
-      p $ preEscapedToHtml (description ep)
+    section $ preEscapedToHtml (description ep)
 
 episode :: Int -> Episode -> Html
 episode index ep = docTypeHtml $ do
