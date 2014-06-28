@@ -12,6 +12,7 @@ import Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as T
 import Data.Text.Lazy.Builder
 import Data.Text.Lazy.Builder.Int
+import Control.Monad
 
 import Web.Postmodem.Feed
 import qualified Web.Postmodem.Feed as W
@@ -20,55 +21,56 @@ index :: [Episode] -> Html
 index episodes = docTypeHtml $ do
   H.head $ do
     H.title "Postmodem"
-    link ! href "style.css" ! rel "stylesheet" ! type_ "text/css"
+    link ! href "/style.css" ! rel "stylesheet" ! type_ "text/css"
     link ! href "http://feeds.feedburner.com/postmodem" ! rel "alternate" ! type_ "application/rss+xml"
   body $ do
     header $ do
       h1 $ do
         a ! href "/" $ "Postmodem"
-      h2 "Voted World's Sincerest Podcast Three Years Running"
+      h2 "Voted Most Sincere Podcast Three Years Running"
       section $ do
         p ! class_ "intro" $ "Three bright-eyed, sincere twenty-somethings discuss pop culture, technology, and rap music."
         p "Hosted by Colin Barrett, Patrick Thomson, and Phillip Bowden."
-        ul $ do
-          li $ a ! href "http://feeds.feedburner.com/postmodem" $ "Subscribe with RSS"
-          li $ a ! href "https://itunes.apple.com/us/podcast/postmodem/id530525508" $ "Subscribe with iTunes"
-          li $ a ! href "https://twitter.com/postmodemcast" $ "Follow us on Twitter"
-    
-    let episodesWithIndex = zip episodes [1..]
-    foldMap episodeFragment episodesWithIndex
+        p $ do
+          a ! href "http://feeds.feedburner.com/postmodem" $ "Subscribe with RSS"
+          " - "
+          a ! href "https://itunes.apple.com/us/podcast/postmodem/id530525508" $ "Subscribe with iTunes"
+          " - "
+          a ! href "https://twitter.com/postmodemcast" $ "Follow us on Twitter"
+
+    section $ do
+      let episodesWithIndex = zip [1..] episodes 
+      foldMap (uncurry $ episodeFragment False) episodesWithIndex
     
 episodeTitle :: Int -> Episode -> Html
-episodeTitle _ ep = "Postmodem —" <> toHtml (epTitle ep)
-    
+episodeTitle _ ep = "Postmodem" <> ndash <> " " <> toHtml (epTitle ep)
+    where ndash = preEscapedToHtml ("&ndash;" :: Text)
 episodeURL :: Int -> Text
 episodeURL i = toLazyText $ "episode/" <> decimal i
 
-episodeFragment :: (Episode, Int) -> Html
-episodeFragment (ep, index) = article ! class_ "episode" $ do
-  header $ do
-    h1 $ do
-      a ! href (toValue $ episodeURL index) $ toHtml (epTitle ep)
-      H.span ! class_ "date" $ toHtml (show (date ep))
-    section $ preEscapedToHtml (description ep)
+episodeFragment :: Bool -> Int -> Episode -> Html
+episodeFragment detail index ep = article ! class_ "episode" $ do
+  article ! class_ "episode" $ do
+    header $ do
+      h1 $ do
+        a ! href (toValue $ episodeURL index) $ toHtml (epTitle ep)
+        H.span ! class_ "date" $ toHtml (show (date ep))
+    section $ do
+      p $ preEscapedToHtml (description ep)
+      when detail $ do
+        audio ! controls "" $ do
+          let s = toValue $ url $ epAudio ep
+          source ! src s ! type_ "audio/mpeg"
 
 episode :: Int -> Episode -> Html
 episode index ep = docTypeHtml $ do
   H.head $ do
-    H.title $ toHtml $ episodeTitle index ep
-    link ! href "style.css" ! rel "stylesheet" ! type_ "text/css"
+    H.title $ episodeTitle index ep
+    link ! href "/style.css" ! rel "stylesheet" ! type_ "text/css"
     link ! href "http://feeds.feedburner.com/postmodem" ! rel "alternate" ! type_ "application/rss+xml"
   body $ do
     header $ do
       h1 $ do
         a ! href "/" $ "Postmodem"
-      h2 "Voted World's Sincerest Podcast Three Years Running"
-      header $ do
-        h1 $ do
-          a ! href (toValue $ episodeURL index) $ toHtml (epTitle ep)
-          H.span ! class_ "date" $ toHtml (show (date ep))
-      section $ do
-        preEscapedToHtml (description ep)
-        audio ! controls "" $ do
-          let s = toValue $ url $ epAudio ep
-          source ! src s ! type_ "audio/mpeg"
+      h2 "Voted Most Sincere Podcast Three Years Running"    
+    section $ episodeFragment True index ep
