@@ -39,7 +39,8 @@ index episodes = docTypeHtml $ do
           a ! href "https://twitter.com/postmodemcast" $ "Follow us on Twitter"
 
     section $ do
-      let episodesWithIndex = zip [1..] episodes 
+      let numEps = length episodes
+          episodesWithIndex = zip [numEps, numEps - 1 .. 1] episodes 
       foldMap (uncurry $ episodeFragment False) episodesWithIndex
     
 episodeTitle :: Int -> Episode -> Html

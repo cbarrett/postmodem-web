@@ -41,7 +41,8 @@ appMain = do
     get "/episode/:idx" $ do
       eps <- getEps
       idx <- param "idx"
-      html $ renderHtml $ episode idx (eps !! idx)
+      let numEps = Prelude.length eps
+      html $ renderHtml $ episode idx (eps !! (numEps - idx))
     
     get "/" $ do
       eps <- getEps
