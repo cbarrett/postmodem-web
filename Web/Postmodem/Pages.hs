@@ -13,6 +13,8 @@ import qualified Data.Text.Lazy as T
 import Data.Text.Lazy.Builder
 import Data.Text.Lazy.Builder.Int
 import Control.Monad
+import Data.Time.Format
+import System.Locale
 
 import Web.Postmodem.Feed
 import qualified Web.Postmodem.Feed as W
@@ -48,6 +50,8 @@ episodeTitle _ ep = "Postmodem" <> ndash <> " " <> toHtml (epTitle ep)
     where ndash = preEscapedToHtml ("&ndash;" :: Text)
 episodeURL :: Int -> Text
 episodeURL i = toLazyText $ "episode/" <> decimal i
+episodeDate :: Episode -> String
+episodeDate ep = formatTime defaultTimeLocale "%B %-d, %Y" (date ep)
 
 episodeFragment :: Bool -> Int -> Episode -> Html
 episodeFragment detail index ep = article ! class_ "episode" $ do
@@ -55,7 +59,7 @@ episodeFragment detail index ep = article ! class_ "episode" $ do
     header $ do
       h1 $ do
         a ! href (toValue $ episodeURL index) $ toHtml (epTitle ep)
-        H.span ! class_ "date" $ toHtml (show (date ep))
+        H.span ! class_ "date" $ toHtml (episodeDate ep)
     section $ do
       p $ preEscapedToHtml (description ep)
       when detail $ do
