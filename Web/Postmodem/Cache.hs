@@ -24,18 +24,18 @@ newTCacheIO :: NominalDiffTime -> IO a -> IO (TCache a)
 newTCacheIO ttl regen = do
   val <- newTVarIO Nothing
   inFlight <- newTVarIO False
-  return TCache {timeToLive = ttl, regenerateProc = regen, inFlight, tVar = val}
+  return TCache {timeToLive = ttl, regenerateProc = regen, inFlight, tVal = val}
 
 cacheOK :: TCache a -> UTCTime -> STM Bool
 cacheOK cache now = do
-  val <- readTVar (tVar cache)
+  val <- readTVar (tVal cache)
   case val of
     Just val' -> return $ diffUTCTime now (birthday val') < timeToLive cache
     Nothing   -> return False
 
 readTCache :: TCache a -> UTCTime -> STM a
 readTCache cache now = do
-  val <- readTVar (tVar cache)
+  val <- readTVar (tVal cache)
   case val of
     Just TCacheVal {value} -> do ok <- cacheOK cache now
                                  if ok then return value
@@ -48,6 +48,6 @@ regenTCache cache birthday = do
   if flying then retry else do
     writeTVar (inFlight cache) True
     newVal <- unsafeIOToSTM (regenerateProc cache)
-    writeTVar (tVar cache) (Just $ TCacheVal {value = newVal, birthday})
+    writeTVar (tVal cache) (Just $ TCacheVal {value = newVal, birthday})
     writeTVar (inFlight cache) False
     return newVal
