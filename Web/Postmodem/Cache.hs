@@ -14,7 +14,7 @@ data TCache a = TCache
   { timeToLive :: NominalDiffTime
   , regenerateProc :: IO a
   , inFlight :: TVar Bool
-  , tVar :: TVar (Maybe (TCacheVal a)) }
+  , tVal :: TVar (Maybe (TCacheVal a)) }
 
 data TCacheVal a = TCacheVal
   { birthday :: UTCTime
